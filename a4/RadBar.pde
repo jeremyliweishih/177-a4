@@ -1,12 +1,9 @@
  class RadBar {
   color c1, c2, currColor, buffColor;
-  
-  color[] colours;
   String name;
   float value;
   float x, y;
   float w, h, angle;
-  
   
   RadBar(float w, float h, String name, float x, float y, float value, float angle) {
     this.name = name;   
@@ -28,8 +25,10 @@
  void drawBar() {
     stroke(0);
     fill(currColor);
+    pushMatrix();
     rotate(angle);
     rect(x, y, w, h);
+    popMatrix();
   }
     
 
@@ -44,6 +43,7 @@
   boolean isect(PGraphics pg) {
     color c = pg.get(mouseX, mouseY);
     if (c == buffColor) {
+      println("aifalksfja");
       return true;
     }
     return false;
