@@ -8,7 +8,7 @@ class Point{
       this.y = y;
       this.name = name;
       this.c1 = c;
-      this.c2 = color(55, 206, 229);
+      this.c2 = color(red(c) * 0.7, green(c) * 0.7, blue(c) * 0.7);
       this.currColor = c1;
   }
   
@@ -19,10 +19,11 @@ class Point{
   }
   
   void highlighted(boolean isect) {
-    if (isect) currColor = c2;
-    else {
+    if (isect) { 
+      currColor = c2;
+    } else {
       currColor = c1;
-          }
+     }
   }
   
   boolean intersect() {

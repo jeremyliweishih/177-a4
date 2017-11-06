@@ -53,7 +53,7 @@ class Line{
         x = xStart + this.spacing * i; 
         y = (yAxisLen - barHeight) + yStart;
 
-        Point pnt = new Point(x + 10, y, Integer.toString(i+1), this.currColor);
+        Point pnt = new Point(x + 10, y, this.type, this.currColor);
         points[i] = pnt; 
        
     }
@@ -73,7 +73,8 @@ class Line{
        if (pnt.intersect()) {
          pnt.highlighted(true);
          fill(0);
-         text(this.data[i], mouseX + 10, mouseY + 10);
+         text(pnt.name, mouseX + 10, mouseY + 10);
+         text(this.data[i], mouseX + 10, mouseY + 10 + textDescent() + textAscent());
        } else {
          pnt.highlighted(false);
         }   
