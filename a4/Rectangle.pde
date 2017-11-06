@@ -195,6 +195,7 @@ class Rectangle {
     if (this.children.size() <= 0) {
       fill(color(0, 0, 0));
       String id = String.valueOf(this.node.id);
+      textSize(5);
       text(id, absX + (absW - textWidth(id)) / 2, absY + absH / 2);
     }
     
