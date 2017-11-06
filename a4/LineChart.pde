@@ -59,7 +59,7 @@ class LineChart extends Chart{
    int curr = 0;
    for (String k : keys) {
      Float[] gens = this.values.get(k);
-     this.types[curr] = new Line(gens, k, this.xAxisLen, this.yAxisLen, this.chartX, this.chartY, this.xMargin, this.yMargin, this.barWidth, this.spacing);
+     this.types[curr] = new Line(gens, k, this.chartX, this.chartY, this.xMargin, this.yMargin, this.barWidth, this.spacing);
      curr++;
    }
 
@@ -73,7 +73,7 @@ class LineChart extends Chart{
     //float xStart = xMargin + chartX; 
     //float yStart = yMargin + chartY; 
     this.ySpacing = (yAxisLen) / this.yMax;
-    for (Line l : types) l.calcStuff(this.ySpacing);
+    for (Line l : types) l.calcStuff(this.ySpacing, this.xAxisLen, this.yAxisLen);
     
    
     //for (int i = 0; i < xNum; i++) {

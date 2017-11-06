@@ -43,7 +43,6 @@
   boolean isect(PGraphics pg) {
     color c = pg.get(mouseX, mouseY);
     if (c == buffColor) {
-      println("aifalksfja");
       return true;
     }
     return false;

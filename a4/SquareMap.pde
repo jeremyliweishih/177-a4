@@ -105,7 +105,6 @@ class SquareMap {
   Rectangle makeCanvas(TreeNode node) {
     if (node != null) {
       normalize(node, sumNodeWeight(node));
-      
       Rectangle newCanvas = new Rectangle(node, null, 0, 0, 1, 1, ON, OFF, this.chartW, this.chartH, this.origin);
       squarify(node, newCanvas);
       return newCanvas;
@@ -193,8 +192,7 @@ class SquareMap {
   
   void mouseClicked() {
     Rectangle over = canvas.whichOver();
-    println("hihihihi");
-    println("over:   ", over.node.id);
+
     if (mouseButton == LEFT) {
       canvas = makeCanvas(over.node);
     }  else if (mouseButton == RIGHT) {

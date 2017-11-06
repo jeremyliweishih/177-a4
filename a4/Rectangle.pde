@@ -99,7 +99,6 @@ class Rectangle {
       children.add(currRect);
       rects.add(currRect);
       currX += currW;
-      println(currX);
     }
     
     this.sh -= currH;

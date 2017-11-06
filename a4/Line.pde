@@ -15,19 +15,19 @@ class Line{
   int chartX, chartY;
 
 
-  Line(Float[] data, String type, float xAxisLen, float yAxisLen, int chartX, int chartY, float xMargin, float yMargin, float barWidth, float spacing) {
+  Line(Float[] data, String type, int chartX, int chartY, float xMargin, float yMargin, float barWidth, float spacing) {
     this.data = data;
     this.type = type;
     this.xNum = data.length;
     this.yMax = getMax();
-    this.xAxisLen = xAxisLen;
-    this.yAxisLen = yAxisLen;
+
     this.chartX = chartX;
     this.chartY = chartY;
     this.xMargin = xMargin;
     this.yMargin = yMargin;
     this.spacing = spacing;
     this.barWidth = barWidth;
+    this.points = new Point[data.length];
   }
   
   float getMax() {
@@ -38,18 +38,22 @@ class Line{
     return max;
   }
 
-  void calcStuff(float ySpacing){
+  void calcStuff(float ySpacing, float xAxisLen, float yAxisLen){
     float xStart = xMargin + chartX; 
     float yStart = yMargin + chartY; 
     this.ySpacing = ySpacing;
-   
+    this.xAxisLen = xAxisLen;
+    this.yAxisLen = yAxisLen;
+   //println(xStart, yStart, "xstart and y start");
     for (int i = 0; i < xNum; i++) {
         float x, y; 
         float barHeight = this.data[i] * ySpacing; 
         x = xStart + this.spacing * i; 
         y = (yAxisLen - barHeight) + yStart;
+        println(yAxisLen, "yaxis len");
+        println("y is: ", y, "-------------------------", "data is ", this.data[i], "barHeight: ", barHeight);
         Point pnt = new Point(x + 10, y, Integer.toString(i+1));
-        points[i] = pnt;
+        points[i] = pnt; 
        
     }
   }
