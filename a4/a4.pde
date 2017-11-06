@@ -32,7 +32,7 @@ TreeNode parseData() {
     Hashtable<String, Hashtable<String, Integer>> gen = hierarchy[i];
     println(gen, "--------------------------------------------");
     float generationVal = 0;
-    TreeNode generation = new TreeNode(Integer.toString(i), generationVal);
+    TreeNode generation = new TreeNode("Generation " + Integer.toString(i+1), generationVal);
     Set<String> keys = gen.keySet();
     for (String key : keys) {
       Hashtable<String, Integer> typeTable = gen.get(key);
@@ -42,15 +42,17 @@ TreeNode parseData() {
       for (String k : subTypes) {
         TreeNode subType = new TreeNode(k, typeTable.get(k));
         type.children.add(subType);
+        subType.parent = type;
         valLeaf += subType.value;
         //sum += valLeaf;
       }
       type.value = valLeaf;
       generationVal += type.value;
-
+      type.parent = generation;
       generation.children.add(type);
     }
     generation.value = generationVal;
+    generation.parent = root;
     root.children.add(generation);
 
   }
