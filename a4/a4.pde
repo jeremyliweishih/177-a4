@@ -9,7 +9,7 @@ Model model;
 
 
 void setup() {
-  size(1000, 750);
+  size(1500, 1000);
   String[] names = {"hi", "bob", "charlie", "poop", "blah", "pls"};
   float [] data = {200.0, 200.0, 200.0, 200.0, 200.0, 200.0};
   model = new Model();
