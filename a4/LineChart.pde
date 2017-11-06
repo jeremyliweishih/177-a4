@@ -19,7 +19,7 @@ class LineChart extends Chart{
   Hashtable<String, Integer> typeColours;
 
 
-  LineChart(String xTitle, String yTitle, float [] data, int chartX, int chartY, int chartW, int chartH, Hashtable<String, Float[]> values, Hashtable<String, Integer> typeColours) {
+  LineChart(String xTitle, String yTitle, int chartX, int chartY, int chartW, int chartH, Hashtable<String, Float[]> values, Hashtable<String, Integer> typeColours) {
     super(chartX, chartY, chartW, chartH);
     
     this.values = values;
@@ -27,8 +27,7 @@ class LineChart extends Chart{
     
     this.xTitle = xTitle;
     this.yTitle = yTitle;
-    this.data = data; 
-    this.xNum = data.length; 
+    this.xNum = 6;
     this.chartH = chartH;
     this.chartW = chartW;
     this.xMargin = 0.15 * chartW; 
@@ -60,6 +59,7 @@ class LineChart extends Chart{
    int curr = 0;
    for (String type : keys) {
      Float[] gens = this.values.get(type);
+     println(type);
      color c = typeColours.get(type);
      println(c);
      this.types[curr] = new Line(gens, type, this.chartX, this.chartY, this.xMargin, this.yMargin, this.barWidth, this.spacing, c);
@@ -130,7 +130,7 @@ void drawAxes(){
       
     }
     
-    for (int i = 0; i < this.data.length; i++) {
+    for (int i = 0; i < xNum; i++) {
       /* rotating x axis text */
       pushMatrix();
       translate(xMargin + 5 + this.spacing * i + chartX, yAxisLen + yMargin + chartY); //change origin 

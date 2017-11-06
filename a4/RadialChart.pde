@@ -1,5 +1,5 @@
 class RadialChart extends Chart {
- float[] data;
+ Float[] data;
  String[] names;
  RadBar[] bars;
  float angleIncrem;
@@ -13,14 +13,14 @@ class RadialChart extends Chart {
  float increm1, increm2;
 
  
- RadialChart(String[] names, float[] data, int chartX, int chartY, int chartW, int chartH) {
+ RadialChart(String[] names, Float[] data, int chartX, int chartY, int chartW, int chartH) {
    super(chartX, chartY, chartW, chartH);
    this.names = names;
    this.data = data;
    //this.pickbuffer = createGraphics(width, height);
    this.barWidth = 10;
-   this.yMax = findMax(data);
-   this.yScale = (this.yMax - 50)/ (min(chartW, chartH)/2);
+   this.yMax = findMax();
+   this.yScale = (min(chartW, chartH)/2) / (this.yMax);
    bars = new RadBar[data.length];
    this.angleIncrem = (2 * PI) / data.length;
    this.chartH = chartH;
@@ -28,7 +28,7 @@ class RadialChart extends Chart {
    this.chartX = chartX;
    this.chartY = chartY;
    this.numIncrems = 8;
-   this.increm1 = (yMax * yScale)/ (numIncrems/2);
+   this.increm1 = (yMax * yScale)/ (numIncrems/ 2);    
 
    this.pickbuffer = createGraphics(chartW + chartX, chartH + chartY);
    
@@ -43,10 +43,10 @@ class RadialChart extends Chart {
 
  }
  
- float findMax(float[] data) {
+ float findMax() {
    float max = data[0];
-   for (float d : data) {
-     if (d > max) max = d;
+   for(float d : data){
+      if(d > max) max = d; 
    }
    return max;
  }
@@ -69,16 +69,17 @@ class RadialChart extends Chart {
      translate(chartW/2 + chartX, chartH/2 + chartY);
      line(0, 0, 0 + yMax * yScale, 0);
      fill(0);
+     
      float increm2 = this.increm1;
      textSize(9);
      for(int i = 0; i < numIncrems; i++){
-       text(Integer.toString((int)(yScale * increm2)), increm2/2, 0);
+       text(Integer.toString((int)(increm2 / (yScale * 2))), increm2/2, 0);
        increm2 += this.increm1;
      }
      textSize(12);
      
     for (RadBar b : bars) {
-      text(b.name, (yMax * yScale + textWidth(b.name) + 5) * cos(b.angle + radians(90)), (yMax * yScale + textWidth(b.name) + 5) * sin(b.angle + radians(90)));    
+      text(b.name, (yMax * yScale + 10) * cos(b.angle + radians(90)), (yMax * yScale + 10) * sin(b.angle + radians(90)));    
     }
     popMatrix();
  }

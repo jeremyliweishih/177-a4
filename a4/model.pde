@@ -65,9 +65,8 @@ public class Model{
     return avgStats;
   }
   
-  Hashtable<String, Float>[] otherStats(){
-     Hashtable<String, Float>[] otherStats = new Hashtable[6];
-    
+  Float[] otherStats(){
+    Float[] otherStats = new Float[6];
     for(int i = 0; i < 6; i++){
        float num = 0;
        float hp = 0;
@@ -78,15 +77,13 @@ public class Model{
        float speed = 0;
        
        for(TableRow row : table.rows()){
-          if(row.getInt("Generation") == i){
-              hp = hp + row.getInt("HP");
-              atck = atck + row.getInt("Attack");
-              def = def + row.getInt("Defense");
-              spatck = spatck + row.getInt("Sp. Atk");
-              spdef = spdef + row.getInt("Sp. Def");
-              speed = speed + row.getInt("Speed"); 
-              num++;
-          }         
+          hp = hp + row.getInt("HP");
+          atck = atck + row.getInt("Attack");
+          def = def + row.getInt("Defense");
+          spatck = spatck + row.getInt("Sp. Atk");
+          spdef = spdef + row.getInt("Sp. Def");
+          speed = speed + row.getInt("Speed"); 
+          num++;
        }
       
       hp = hp / num;
@@ -96,13 +93,12 @@ public class Model{
       spdef = spdef / num;
       speed = speed / num;
       
-      otherStats[i] = new Hashtable<String, Float>();
-      otherStats[i].put("HP", hp);
-      otherStats[i].put("Attack", atck);
-      otherStats[i].put("Defense", def);
-      otherStats[i].put("Sp. Atk", spatck);
-      otherStats[i].put("Sp. Def", spdef);
-      otherStats[i].put("Speed", speed);
+      otherStats[0] = hp;
+      otherStats[1] = atck;
+      otherStats[2] = def;
+      otherStats[3] = spatck;
+      otherStats[4] = spdef;
+      otherStats[5] = speed;
     }
     
     return otherStats;

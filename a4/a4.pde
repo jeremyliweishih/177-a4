@@ -14,28 +14,30 @@ Hashtable<String, Integer> typeColours = new Hashtable<String, Integer>() {{ put
                 put("Fairy", #D685AD); put("Grass", #7AC74C); put("Bug", #A6B91A); put("Ground", #E2BF65); }};
 
 
+String type = "";
+int generation = -1;
+
 void setup() {
   size(1000, 750);
-  String[] names = {"hi", "bob", "charlie", "poop", "blah", "pls"};
-  float [] data = {200.0, 200.0, 200.0, 200.0, 200.0, 200.0};
   model = new Model();
   this.hierarchy = model.getHierarchy();
-
+  String[] names = {"HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"};
+  Float[] data = model.otherStats();
+  //Float[] data = {200.0, 200.0, 200.0, 200.0, 200.0, 200.0};
   rc = new RadialChart(names, data, 0, 0, width/2, height/2);
 
-  
+  for(Float n : data){
+     println(n + ","); 
+  }
   
   
   Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
   for (String t : pokeTypes) {
-    Float[] blah = model.avgStatsGeneration(t);
-    println(t);
-    for (Float f : blah) print(Float.toString(f), ", ");
    val.put(t, model.avgStatsGeneration(t)); 
-   
   }
+  
   //println(val);
-  lc = new LineChart("names", "data", data, 0, height/2, width/2, height/2, val, typeColours);
+  lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours);
   TreeNode root = parseData();
   square = new SquareMap(width/2, height, width/2, root);
   
@@ -83,6 +85,20 @@ TreeNode parseData() {
 }
 
 void draw() {
+ if(!type.isEmpty()){
+     Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
+     val.put(type, model.avgStatsGeneration(type)); 
+     lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours);
+ } else{
+       Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
+      for (String t : pokeTypes) {
+       val.put(t, model.avgStatsGeneration(t)); 
+      }
+      
+      //println(val);
+      lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours);
+ }
+ println(type);
  background(255); 
  rc.draw();
  lc.draw();
@@ -100,5 +116,5 @@ void mouseMoved() {
 }
 
 void mouseClicked() {
-  square.mouseClicked();
+  type = square.mouseClicked();
 }

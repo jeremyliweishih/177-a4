@@ -190,15 +190,30 @@ class SquareMap {
     offRects(canvas, canvas.whichOver());
   }
   
-  void mouseClicked() {
+  String mouseClicked() {
+    CharSequence cs1 = "Gen";
     Rectangle over = canvas.whichOver();
     if (over != null) {
       if (mouseButton == LEFT) {
         canvas = makeCanvas(over.node);
+        if(over.node.id.equals("NA")){
+           return(over.node.parent.id); 
+        } else if(over.node.id.contains(cs1)){
+           return ""; 
+        }
+        return over.node.id;
       }  else if (mouseButton == RIGHT) {
+        String toReturn = canvas.node.parent.id;
         canvas = makeCanvas(canvas.node.parent);
+        if(toReturn.contains(cs1)){
+           return ""; 
+        }
+        //println(canvas.node.parent.id, "    AHHHAIOSJAOJSLAK:LSA+======");
+        return toReturn;
       }
     }
+    
+    return "";
   }
   
   Boolean resized() {
