@@ -10,14 +10,14 @@ class SquareMap {
   float currWid, currHgt;
   int chartW, chartH, origin;
   
-  SquareMap(int chartW, int chartH, int origin) {
+  SquareMap(int chartW, int chartH, int origin, TreeNode root) {
     background(color(255, 255, 255));
     currWid = chartW;
     currHgt = chartH;
     this.chartW = chartW;
     this.chartH = chartH;
     this.origin = origin;
-    root = parseData();
+    this.root = root;
     canvas = makeCanvas(root);
   }
   
@@ -31,53 +31,53 @@ class SquareMap {
     }
   }
   
-  // parse data into tree
-  TreeNode parseData() {
-    String[] lines = loadStrings("hierarchy2.shf");
-    int numLeaves = Integer.valueOf(lines[0]);
-    HashMap<Integer, TreeNode> nodes = new HashMap<Integer, TreeNode>();
+  //// parse data into tree
+  //TreeNode parseData() {
+  //  String[] lines = loadStrings("hierarchy2.shf");
+  //  int numLeaves = Integer.valueOf(lines[0]);
+  //  HashMap<Integer, TreeNode> nodes = new HashMap<Integer, TreeNode>();
     
-    for (int i = 1; i <= numLeaves; i++) {
-      String[] currLine = lines[i].split(" ");
-      int id = Integer.valueOf(currLine[0]);
-      float wgt = Float.valueOf(currLine[1]);
-      nodes.put(id, new TreeNode(id, wgt));
-    }
+  //  for (int i = 1; i <= numLeaves; i++) {
+  //    String[] currLine = lines[i].split(" ");
+  //    int id = Integer.valueOf(currLine[0]);
+  //    float wgt = Float.valueOf(currLine[1]);
+  //    nodes.put(id, new TreeNode(id, wgt));
+  //  }
     
-    int numEdges = Integer.valueOf(lines[numLeaves + 1]);
-    for (int i = numLeaves + 2; i < numLeaves + 2 + numEdges; i++) {
-      String[] currLine = lines[i].split(" ");
-      int parentId = Integer.valueOf(currLine[0]);
-      int childId = Integer.valueOf(currLine[1]);
-      TreeNode parent, child;
+  //  int numEdges = Integer.valueOf(lines[numLeaves + 1]);
+  //  for (int i = numLeaves + 2; i < numLeaves + 2 + numEdges; i++) {
+  //    String[] currLine = lines[i].split(" ");
+  //    int parentId = Integer.valueOf(currLine[0]);
+  //    int childId = Integer.valueOf(currLine[1]);
+  //    TreeNode parent, child;
       
-      if (!nodes.containsKey(parentId)) {
-        parent = new TreeNode(parentId, 0);
-        nodes.put(parentId, parent);
-      } else {
-        parent = nodes.get(parentId);
-      }
-      if (!nodes.containsKey(childId)) {
-        child = new TreeNode(childId, 0);
-        nodes.put(childId, child);
-      } else {
-        child = nodes.get(childId);
-      }
+  //    if (!nodes.containsKey(parentId)) {
+  //      parent = new TreeNode(parentId, 0);
+  //      nodes.put(parentId, parent);
+  //    } else {
+  //      parent = nodes.get(parentId);
+  //    }
+  //    if (!nodes.containsKey(childId)) {
+  //      child = new TreeNode(childId, 0);
+  //      nodes.put(childId, child);
+  //    } else {
+  //      child = nodes.get(childId);
+  //    }
       
-      child.parent = parent;
-      parent.children.add(child);
-    }
+  //    child.parent = parent;
+  //    parent.children.add(child);
+  //  }
     
-    TreeNode root = null;
-    for (TreeNode node : nodes.values()) {
-      if (node.parent == null) {
-        root = node;
-        break;
-      }
-    }
+  //  TreeNode root = null;
+  //  for (TreeNode node : nodes.values()) {
+  //    if (node.parent == null) {
+  //      root = node;
+  //      break;
+  //    }
+  //  }
     
-    return root;
-  }
+  //  return root;
+  //}
   
   // gets total weight of a tree
   // side effect: nonleaf nodes have their weights set to that of their children

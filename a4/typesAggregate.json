@@ -1,5 +1,5 @@
-{
-   "Steel":{
+[
+   "Steel":[
       "Ghost":4,
       "NA":4,
       "Psychic":6,
@@ -7,16 +7,16 @@
       "Rock":3,
       "Fairy":3,
       "Ground":2
-   },
-   "Ghost":{
+   ],
+   "Ghost":[
       "Fire":3,
       "NA":10,
       "Flying":2,
       "Poison":4,
       "Dark":1,
       "Grass":10
-   },
-   "Grass":{
+   ],
+   "Grass":[
       "Steel":2,
       "Ice":3,
       "NA":32,
@@ -28,8 +28,8 @@
       "Fighting":2,
       "Fairy":2,
       "Ground":1
-   },
-   "Electric":{
+   ],
+   "Electric":[
       "Steel":3,
       "Ghost":1,
       "Normal":2,
@@ -41,8 +41,8 @@
       "Water":1,
       "Fairy":1,
       "Grass":1
-   },
-   "Normal":{
+   ],
+   "Normal":[
       "NA":59,
       "Psychic":2,
       "Flying":24,
@@ -51,8 +51,8 @@
       "Fairy":5,
       "Grass":2,
       "Ground":1
-   },
-   "Fire":{
+   ],
+   "Fire":[
       "Normal":2,
       "NA":27,
       "Psychic":2,
@@ -61,39 +61,39 @@
       "Dragon":1,
       "Rock":1,
       "Ground":3
-   },
-   "Psychic":{
+   ],
+   "Psychic":[
       "NA":29,
       "Fairy":6,
       "Flying":5,
       "Grass":1,
       "Fighting":2
-   },
-   "Flying":{
+   ],
+   "Flying":[
       "Dragon":2
-   },
-   "Fighting":{
+   ],
+   "Fighting":[
       "Steel":2,
       "NA":20,
       "Psychic":3,
       "Dark":1,
       "Flying":1
-   },
-   "Ice":{
+   ],
+   "Ice":[
       "Ghost":1,
       "NA":12,
       "Psychic":2,
       "Flying":1,
       "Water":3,
       "Ground":3
-   },
-   "Dragon":{
+   ],
+   "Dragon":[
       "NA":11,
       "Fairy":1,
       "Flying":4,
       "Ground":4
-   },
-   "Dark":{
+   ],
+   "Dark":[
       "Ghost":2,
       "Steel":2,
       "Fire":3,
@@ -103,8 +103,8 @@
       "Fighting":2,
       "Dragon":3,
       "Ice":2
-   },
-   "Poison":{
+   ],
+   "Poison":[
       "Water":1,
       "NA":15,
       "Flying":3,
@@ -113,8 +113,8 @@
       "Dark":3,
       "Bug":1,
       "Ground":2
-   },
-   "Rock":{
+   ],
+   "Rock":[
       "Steel":3,
       "Dark":2,
       "NA":8,
@@ -127,12 +127,12 @@
       "Grass":2,
       "Bug":2,
       "Ground":6
-   },
-   "Fairy":{
+   ],
+   "Fairy":[
       "NA":14,
       "Flying":2
-   },
-   "Water":{
+   ],
+   "Water":[
       "Steel":1,
       "Ghost":2,
       "Electric":2,
@@ -148,8 +148,8 @@
       "Fairy":2,
       "Grass":3,
       "Ground":10
-   },
-   "Bug":{
+   ],
+   "Bug":[
       "Steel":7,
       "Ghost":1,
       "Electric":2,
@@ -162,8 +162,8 @@
       "Rock":3,
       "Grass":6,
       "Ground":2
-   },
-   "Ground":{
+   ],
+   "Ground":[
       "Steel":1,
       "Ghost":2,
       "Electric":1,
@@ -173,5 +173,5 @@
       "Dragon":2,
       "Dark":3,
       "Rock":3
-   }
-}
+   ]
+]

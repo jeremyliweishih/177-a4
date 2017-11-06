@@ -1,11 +1,11 @@
 class TreeNode implements Comparable<TreeNode> {
-  int id;
+  String id;
   float value;
   float ratio;
   TreeNode parent;
   ArrayList<TreeNode> children;
   
-  TreeNode(int id, float value) {
+  TreeNode(String id, float value) {
     this.id = id;
     this.value = value;
     this.ratio = value;
