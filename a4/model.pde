@@ -32,7 +32,10 @@ public class Model{
           }
         }
         
-        float avg = sum / num;
+        float avg = 0;
+        if(num != 0){
+          avg = sum / num;
+        }
         avgStats[i-1] = avg;
     }
     
@@ -51,11 +54,98 @@ public class Model{
           }
         }
         
-        float avg = sum / num;
+        float avg = 0;
+        if(num != 0){
+          avg = sum / num;
+        }
+        
         avgStats[i-1] = avg;
     }
     
     return avgStats;
+  }
+  
+  Hashtable<String, Float>[] otherStats(){
+     Hashtable<String, Float>[] otherStats = new Hashtable[6];
+    
+    for(int i = 0; i < 6; i++){
+       float num = 0;
+       float hp = 0;
+       float atck = 0;
+       float def = 0;
+       float spatck = 0;
+       float spdef = 0;
+       float speed = 0;
+       
+       for(TableRow row : table.rows()){
+          if(row.getInt("Generation") == i){
+              hp = hp + row.getInt("HP");
+              atck = atck + row.getInt("Attack");
+              def = def + row.getInt("Defense");
+              spatck = spatck + row.getInt("Sp. Atk");
+              spdef = spdef + row.getInt("Sp. Def");
+              speed = speed + row.getInt("Speed"); 
+              num++;
+          }         
+       }
+      
+      hp = hp / num;
+      atck = atck / num;
+      def = def / num;
+      spatck = spatck / num;
+      spdef = spdef / num;
+      speed = speed / num;
+      
+      otherStats[i] = new Hashtable<String, Float>();
+      otherStats[i].put("HP", hp);
+      otherStats[i].put("Attack", atck);
+      otherStats[i].put("Defense", def);
+      otherStats[i].put("Sp. Atk", spatck);
+      otherStats[i].put("Sp. Def", spdef);
+      otherStats[i].put("Speed", speed);
+    }
+    
+    return otherStats;
+  }
+  
+     Hashtable<String, Float> otherStats(int g, String type){
+     Hashtable<String, Float> otherStats = new Hashtable<String, Float>();
+    
+       float num = 0;
+       float hp = 0;
+       float atck = 0;
+       float def = 0;
+       float spatck = 0;
+       float spdef = 0;
+       float speed = 0;
+       
+       for(TableRow row : table.rows()){
+          if(row.getInt("Generation") == g && row.getString("Type 1") == type){
+              hp = hp + row.getInt("HP");
+              atck = atck + row.getInt("Attack");
+              def = def + row.getInt("Defense");
+              spatck = spatck + row.getInt("Sp. Atk");
+              spdef = spdef + row.getInt("Sp. Def");
+              speed = speed + row.getInt("Speed"); 
+              num++;
+          }
+       }
+      
+      hp = hp / num;
+      atck = atck / num;
+      def = def / num;
+      spatck = spatck / num;
+      spdef = spdef / num;
+      speed = speed / num;
+      
+      otherStats.put("HP", hp);
+      otherStats.put("Attack", atck);
+      otherStats.put("Defense", def);
+      otherStats.put("Sp. Atk", spatck);
+      otherStats.put("Sp. Def", spdef);
+      otherStats.put("Speed", speed);
+    
+    return otherStats;
   }
   
    Hashtable<String, Hashtable<String, Integer>>[] getHierarchy(){

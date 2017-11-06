@@ -3,11 +3,11 @@ class Point{
   String name;
   color c1, c2, currColor;
   
-  Point(float x, float y, String name){
+  Point(float x, float y, String name, color c){
       this.x = x;
       this.y = y;
       this.name = name;
-      this.c1 = color(158, 220, 229);
+      this.c1 = c;
       this.c2 = color(55, 206, 229);
       this.currColor = c1;
   }

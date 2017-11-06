@@ -13,9 +13,10 @@ class Line{
   float yAxisLen;
   float ySpacing;  
   int chartX, chartY;
+  color currColor;
 
 
-  Line(Float[] data, String type, int chartX, int chartY, float xMargin, float yMargin, float barWidth, float spacing) {
+  Line(Float[] data, String type, int chartX, int chartY, float xMargin, float yMargin, float barWidth, float spacing, color c) {
     this.data = data;
     this.type = type;
     this.xNum = data.length;
@@ -28,6 +29,7 @@ class Line{
     this.spacing = spacing;
     this.barWidth = barWidth;
     this.points = new Point[data.length];
+    this.currColor = c;
   }
   
   float getMax() {
@@ -50,9 +52,8 @@ class Line{
         float barHeight = this.data[i] * ySpacing; 
         x = xStart + this.spacing * i; 
         y = (yAxisLen - barHeight) + yStart;
-        println(yAxisLen, "yaxis len");
-        println("y is: ", y, "-------------------------", "data is ", this.data[i], "barHeight: ", barHeight);
-        Point pnt = new Point(x + 10, y, Integer.toString(i+1));
+
+        Point pnt = new Point(x + 10, y, Integer.toString(i+1), this.currColor);
         points[i] = pnt; 
        
     }

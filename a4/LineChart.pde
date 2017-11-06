@@ -16,9 +16,10 @@ class LineChart extends Chart{
   int chartW, chartH, chartX, chartY;
   Hashtable<String, Float[]> values;
   Line[] types;
+  Hashtable<String, Integer> typeColours;
 
 
-  LineChart(String xTitle, String yTitle, float [] data, int chartX, int chartY, int chartW, int chartH, Hashtable<String, Float[]> values) {
+  LineChart(String xTitle, String yTitle, float [] data, int chartX, int chartY, int chartW, int chartH, Hashtable<String, Float[]> values, Hashtable<String, Integer> typeColours) {
     super(chartX, chartY, chartW, chartH);
     
     this.values = values;
@@ -36,7 +37,7 @@ class LineChart extends Chart{
     this.barWidth = this.barFill * spacing;
     this.chartX = chartX;
     this.chartY = chartY;
-    
+    this.typeColours = typeColours;
     makeLines(); 
     this.yMax = getTotalMax(); 
     
@@ -57,9 +58,11 @@ class LineChart extends Chart{
   void makeLines() {
    Set<String> keys = values.keySet();
    int curr = 0;
-   for (String k : keys) {
-     Float[] gens = this.values.get(k);
-     this.types[curr] = new Line(gens, k, this.chartX, this.chartY, this.xMargin, this.yMargin, this.barWidth, this.spacing);
+   for (String type : keys) {
+     Float[] gens = this.values.get(type);
+     color c = typeColours.get(type);
+     println(c);
+     this.types[curr] = new Line(gens, type, this.chartX, this.chartY, this.xMargin, this.yMargin, this.barWidth, this.spacing, c);
      curr++;
    }
 
@@ -133,7 +136,7 @@ void drawAxes(){
       translate(xMargin + 5 + this.spacing * i + chartX, yAxisLen + yMargin + chartY); //change origin 
       rotate(PI/2); //rotate around new origin 
       fill(0);
-      text(" Generation" + Integer.toString(i+1), 0, 0); //put text at new origin 
+      text(" Gen " + Integer.toString(i+1), 0, 0); //put text at new origin 
       popMatrix();
      /* end rotate text */
     }

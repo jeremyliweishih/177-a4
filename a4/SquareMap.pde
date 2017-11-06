@@ -192,11 +192,12 @@ class SquareMap {
   
   void mouseClicked() {
     Rectangle over = canvas.whichOver();
-
-    if (mouseButton == LEFT) {
-      canvas = makeCanvas(over.node);
-    }  else if (mouseButton == RIGHT) {
-      canvas = makeCanvas(canvas.node.parent);
+    if (over != null) {
+      if (mouseButton == LEFT) {
+        canvas = makeCanvas(over.node);
+      }  else if (mouseButton == RIGHT) {
+        canvas = makeCanvas(canvas.node.parent);
+      }
     }
   }
   
