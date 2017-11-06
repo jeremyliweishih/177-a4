@@ -25,11 +25,6 @@ void setup() {
   Float[] data = model.otherStats();
   //Float[] data = {200.0, 200.0, 200.0, 200.0, 200.0, 200.0};
   rc = new RadialChart(names, data, 0, 0, width/2, height/2);
-
-  for(Float n : data){
-     println(n + ","); 
-  }
-  
   
   Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
   for (String t : pokeTypes) {

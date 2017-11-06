@@ -203,13 +203,17 @@ class SquareMap {
         }
         return over.node.id;
       }  else if (mouseButton == RIGHT) {
-        String toReturn = canvas.node.parent.id;
-        canvas = makeCanvas(canvas.node.parent);
-        if(toReturn.contains(cs1)){
-           return ""; 
+        if(canvas.node.parent != null){
+          String toReturn = canvas.node.parent.id;
+          canvas = makeCanvas(canvas.node.parent);
+          if(toReturn.contains(cs1)){
+             return ""; 
+          } else if(toReturn.equals("root")){
+             return ""; 
+          }
+          //println(canvas.node.parent.id, "    AHHHAIOSJAOJSLAK:LSA+======");
+          return toReturn;
         }
-        //println(canvas.node.parent.id, "    AHHHAIOSJAOJSLAK:LSA+======");
-        return toReturn;
       }
     }
     
