@@ -1,5 +1,6 @@
- import java.util.*;
-
+import java.util.*;
+import processing.sound.*;
+SoundFile file;
 RadialChart rc;
 LineChart lc;
 SquareMap square;
@@ -13,18 +14,22 @@ Hashtable<String, Integer> typeColours = new Hashtable<String, Integer>() {{ put
                 put("Dragon", #6F35FC); put("Water", #6390F0); put("Fighting", #C22E28); put("Rock", #B6A136);
                 put("Fairy", #D685AD); put("Grass", #7AC74C); put("Bug", #A6B91A); put("Ground", #E2BF65); }};
 
-
-String type = "";
+String[] names = {"HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"};
+String type1 = "";
+String type2 = "";
 int generation = -1;
-
+Message lineM;
+ArrayList<String> hovered;
 void setup() {
   size(1000, 750);
+  smooth();
+  pixelDensity(2);
   model = new Model();
+  hovered = new ArrayList<String>();
   this.hierarchy = model.getHierarchy();
-  String[] names = {"HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"};
   Float[] data = model.otherStats();
   //Float[] data = {200.0, 200.0, 200.0, 200.0, 200.0, 200.0};
-  rc = new RadialChart(names, data, 0, 0, width/2, height/2);
+  rc = new RadialChart(names, data, 0, 20, width/2, height/2 - 20);
   
   Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
   for (String t : pokeTypes) {
@@ -32,10 +37,10 @@ void setup() {
   }
   
   //println(val);
-  lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours);
+  lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours, hovered);
   TreeNode root = parseData();
-  square = new SquareMap(width/2, height, width/2, root);
-  
+  square = new SquareMap(width/2 - 10, height - 10, width/2 + 5, 5, root);
+  file = new SoundFile(this, "pokemon.mp3");
 }
 
 TreeNode parseData() {
@@ -80,36 +85,91 @@ TreeNode parseData() {
 }
 
 void draw() {
- if(!type.isEmpty()){
+ if(!type1.isEmpty()){
      Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
-     val.put(type, model.avgStatsGeneration(type)); 
-     lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours);
+     val.put(type1, model.avgStatsGeneration(type1)); 
+     lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours, hovered);
+     if(generation != -1 && type2.isEmpty()){
+        Float[] data = model.otherStats(generation, type1);
+        rc = new RadialChart(rc.names, data, 0, 20, width/2, height/2 - 20);
+     }  else if(!type2.isEmpty()){
+          Float[] data = model.otherStats(generation, type1, type2);
+          rc = new RadialChart(rc.names, data, 0, 20, width/2, height/2 -20);
+        }
  } else{
-       Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
+      Hashtable<String, Float[]>val = new Hashtable<String, Float[]>();
       for (String t : pokeTypes) {
        val.put(t, model.avgStatsGeneration(t)); 
-      }
+      }      
+      lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours, hovered);
       
-      //println(val);
-      lc = new LineChart("names", "data", 0, height/2, width/2, height/2, val, typeColours);
+        Float[] data = model.otherStats();
+        rc = new RadialChart(rc.names, data, 0, 20, width/2, height/2 -20 ); 
  }
- println(type);
+ mouseMoved();
+
  background(255); 
- rc.draw();
- lc.draw();
- pushMatrix();
- translate(width/2, 0);
- square.draw();
- popMatrix();
  
+ pushMatrix();
+ translate(width/2, 5);
+ hovered = square.draw();
+ if(hovered.size() != 0){ 
+   if(!hovered.get(0).contains("Gen") && generation != -1){
+      hovered.add(0, "Generation " + Integer.toString(generation));
+   }   
+ }
+ popMatrix();
+   rc.draw();
+  if(hovered.size() == 2){
+     rc.drawOtherBars(model.otherStats(Integer.valueOf(hovered.get(0).split(" ")[1]), hovered.get(1))); 
+ } else if(hovered.size() == 1){
+    rc.drawOtherBars(model.otherStats(Integer.valueOf(hovered.get(0).split(" ")[1]))); 
+ } else if (hovered.size() == 3){
+    rc.drawOtherBars(model.otherStats(Integer.valueOf(hovered.get(0).split(" ")[1]), hovered.get(1), hovered.get(2))); 
+ }
+ lineM = lc.draw();
+ if(!lineM.type1.isEmpty()){
+     rc.drawOtherBars(model.otherStats(lineM.gen,lineM.type1));
+     square.hover = lineM;
+     pushMatrix();
+     translate(width/2, 5);
+     square.draw();
+     popMatrix();
+ }
+ 
+ if(!hoverCol.isEmpty()){
+   Message best = model.bestStat(generation, hoverCol);
+   ArrayList<String> radHover = new ArrayList();
+   radHover.add(0, "Gen " + Integer.toString(best.gen));
+   radHover.add(1, best.type1);
+   lc.hovered = radHover;
+   lc.draw();
+   
+     square.hover = best;
+     pushMatrix();
+     translate(width/2, 5);
+     square.draw();
+     popMatrix();
+ }
 }
 
-
+String hoverCol = "";
 void mouseMoved() {
-  rc.radBarChartIsect();
-   
+  hoverCol = rc.radBarChartIsect();
 }
 
 void mouseClicked() {
-  type = square.mouseClicked();
+  Message m = square.mouseClicked();
+  if(m != null){
+   type1 = m.type1;
+    type2 = m.type2;
+    generation = Integer.valueOf(m.gen); 
+  }
+  
+  if(mouseX < width/2 && mouseButton == LEFT){
+      file.play();
+  } else if(mouseX < width/2 && mouseButton == RIGHT){
+     file.stop(); 
+  }
+  
 }

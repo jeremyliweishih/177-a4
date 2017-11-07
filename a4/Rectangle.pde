@@ -10,9 +10,9 @@ class Rectangle {
   color on, off;
   int chartW, chartH;
   private color c;
-  int origin;
+  int originX, originY;
   
-  Rectangle(TreeNode node, Rectangle parent, float x, float y, float w, float h, color on, color off, int chartW, int chartH, int origin) {
+  Rectangle(TreeNode node, Rectangle parent, float x, float y, float w, float h, color on, color off, int chartW, int chartH, int originX, int originY) {
     this.node = node;
     this.x = x;
     this.y = y;
@@ -28,7 +28,8 @@ class Rectangle {
     this.c = off;
     this.chartW = chartW;
     this.chartH = chartH;
-    this.origin = origin;
+    this.originX = originX;
+    this.originY = originY;
 
     children = new ArrayList<Rectangle>();
   }
@@ -69,7 +70,7 @@ class Rectangle {
     for (TreeNode node : nodes) {
       float currH = (node.ratio / sum) * this.sh;
       currW = (node.ratio * this.chartW * this.chartH) / (currH * getHeight()) / getWidth();
-      Rectangle currRect = new Rectangle(node, this, this.sx, currY, currW, currH, this.on, this.off, this.chartW, this.chartH, this.origin);
+      Rectangle currRect = new Rectangle(node, this, this.sx, currY, currW, currH, this.on, this.off, this.chartW, this.chartH, this.originX, this.originY);
       currRect.parent = this;
       children.add(currRect);
       rects.add(currRect);
@@ -94,7 +95,7 @@ class Rectangle {
     for (TreeNode node : nodes) {
       float currW = (node.ratio / sum) * this.sw;
       currH = (node.ratio * this.chartW * this.chartH) / (currW * getWidth()) / getHeight();
-      Rectangle currRect = new Rectangle(node, this, currX, this.sy, currW, currH, this.on, this.off, this.chartW, this.chartH, this.origin);
+      Rectangle currRect = new Rectangle(node, this, currX, this.sy, currW, currH, this.on, this.off, this.chartW, this.chartH, this.originX, this.originY);
       currRect.parent = this;
       children.add(currRect);
       rects.add(currRect);
@@ -189,12 +190,12 @@ class Rectangle {
     float hOff = yOff + getDOff();
     fill(this.c);
     rect(absX + xOff, absY + yOff, absW - wOff, absH - hOff);
-    //println(absX, absY, absW, absH, "x y w h AHHHHHH----------------");
     // label
-    if (this.children.size() <= 0) {
+    if (this.children.size() == 0 && this.node.value != 0) {
       fill(color(0, 0, 0));
       String id = String.valueOf(this.node.id);
-      textSize(10);
+      textSize(5);
+      textAlign(LEFT, CENTER);
       text(id, absX + (absW - textWidth(id)) / 2, absY + absH / 2);
     }
     
@@ -230,8 +231,8 @@ class Rectangle {
     float yOff = getUOff();
     float wOff = xOff + getROff();
     float hOff = yOff + getDOff();
-    return mouseX - this.origin >= absX + xOff && mouseX -this.origin <= absX + absW - wOff &&
-           mouseY >= absY + yOff && mouseY <= absY + absH - hOff;
+    return mouseX - this.originX >= absX + xOff && mouseX -this.originX <= absX + absW - wOff &&
+           mouseY - this.originY >= absY + yOff && mouseY - this.originY <= absY + absH - hOff;
   }
   
   void onOver() {

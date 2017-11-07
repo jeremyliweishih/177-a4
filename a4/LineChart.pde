@@ -1,5 +1,5 @@
 
-class LineChart extends Chart{
+class LineChart{
   //String[] names;
   float[] data;
   Point [] points;
@@ -17,11 +17,10 @@ class LineChart extends Chart{
   Hashtable<String, Float[]> values;
   Line[] types;
   Hashtable<String, Integer> typeColours;
+  ArrayList<String> hovered;
 
-
-  LineChart(String xTitle, String yTitle, int chartX, int chartY, int chartW, int chartH, Hashtable<String, Float[]> values, Hashtable<String, Integer> typeColours) {
-    super(chartX, chartY, chartW, chartH);
-    
+  LineChart(String xTitle, String yTitle, int chartX, int chartY, int chartW, int chartH, Hashtable<String, Float[]> values, Hashtable<String, Integer> typeColours, ArrayList<String> h) {
+    this.hovered = h;
     this.values = values;
     this.types = new Line[values.size()];
     
@@ -59,9 +58,7 @@ class LineChart extends Chart{
    int curr = 0;
    for (String type : keys) {
      Float[] gens = this.values.get(type);
-     println(type);
      color c = typeColours.get(type);
-     println(c);
      this.types[curr] = new Line(gens, type, this.chartX, this.chartY, this.xMargin, this.yMargin, this.barWidth, this.spacing, c);
      curr++;
    }
@@ -90,27 +87,33 @@ class LineChart extends Chart{
     //}
   }
   
-  void draw() { 
-    for (Line l : this.types) l.draw();
-
-    //for (int i = 0; i < xNum; i++) {
-    //  //stroke(color(55, 206, 229)); 
-    //  fill(0);
-    //  points[i].drawPoint();
-    //}
-    
-    //for(int i = 0; i < xNum; i++) {
-    //   Point pnt = points[i];
-    //   if (pnt.intersect()) {
-    //     pnt.highlighted(true);
-    //     fill(0);
-    //     text(this.data[i], mouseX + 10, mouseY + 10);
-    //   } else {
-    //     pnt.highlighted(false);
-    //    }   
-    //}
-  
+  Message draw() { 
+    Message m = new Message(-1, "", "");
+    if(hovered.size() != 0){
+      int hiSection = Integer.valueOf(hovered.get(0).split(" ")[1]) - 1;
+      fill(color(158, 220, 229));
+      stroke(color(158, 220, 229));
+      rect(xMargin + this.spacing * hiSection + chartX, chartY + yMargin, this.spacing * 0.7, yAxisLen);
+    }
+    for (Line l : this.types) {
+      strokeWeight(1);
+      if(hovered.size() > 1){
+        if (l.type.equals(hovered.get(1))) {
+          strokeWeight(5);
+          l.currColor = (color(255,230,45));
+          //stroke(color(255,230,45));
+        } else {
+          l.currColor = typeColours.get(l.type);
+          //stroke(0);
+          strokeWeight(1);
+        }
+      }
+      Message temp_m = l.draw();
+      if(!temp_m.type1.isEmpty()) m = temp_m;
+    }
     drawAxes();
+
+    return m;
   }
   
 void drawAxes(){

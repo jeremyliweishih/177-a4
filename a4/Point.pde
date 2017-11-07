@@ -24,7 +24,7 @@ class Point{
     } else {
       currColor = c1;
      }
-  }
+   }
   
   boolean intersect() {
    if (mouseX <= this.x + 1 && mouseX >= this.x - 1 && mouseY <= this.y + 5 && mouseY >= this.y-5) return true;

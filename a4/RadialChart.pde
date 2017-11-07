@@ -61,9 +61,29 @@ class RadialChart extends Chart {
    popMatrix();
    drawCircle();
    drawLabels();
-   
  }
  
+ void drawOtherBars(Float[] data){
+    float increm = blue(buff) / data.length;  
+    float angle = 0;
+    RadBar[] otherBars = new RadBar[6];
+    for (int i = 0; i < data.length; i++) {
+     otherBars[i] = new RadBar(barWidth/2, data[i] * yScale, names[i], 0, 0, data[i], angle);
+     angle += angleIncrem;
+     otherBars[i].setBuffColor(buff);
+     buff = color(red(buff), green(buff), blue(buff)-increm);
+     otherBars[i].c1 = color(255,230,45);
+     otherBars[i].c2 = color(255, 230, 45);
+     otherBars[i].currColor = otherBars[i].c1;
+   }
+   pushMatrix();
+   translate(chartW/2 + chartX, chartH/2 + chartY) ;
+   for (RadBar b : otherBars) {
+     b.drawBar();
+   }
+   popMatrix();
+   drawCircle();
+ }
  void drawLabels(){
      pushMatrix();
      translate(chartW/2 + chartX, chartH/2 + chartY);
@@ -79,7 +99,11 @@ class RadialChart extends Chart {
      textSize(12);
      
     for (RadBar b : bars) {
-      text(b.name, (yMax * yScale + 10) * cos(b.angle + radians(90)), (yMax * yScale + 10) * sin(b.angle + radians(90)));    
+      float textX = (yMax * yScale + 10) * cos(b.angle + radians(90));
+      float textY = (yMax * yScale + 10) * sin(b.angle + radians(90)) + 5;
+      if (textX < 0) textX = textX - textWidth(b.name);
+      //if (textY < 0) textY = textY;
+      text(b.name, textX, textY);    
     }
     popMatrix();
  }
@@ -130,17 +154,18 @@ class RadialChart extends Chart {
 
  }
  
- void radBarChartIsect() {
+ String radBarChartIsect() {
    drawPickBuffer();
   
    for (int i = 0; i< data.length; i++) { 
      if (bars[i].isect(pickbuffer) == true) {
        bars[i].highlighted();
+       return bars[i].name;
      }
      else {
        bars[i].notHighlighted();
      }
    }  
+    return ""; 
  }
-   
 }

@@ -8,76 +8,34 @@ class SquareMap {
   color ON = color(65, 105, 225);
   color OFF = color(255, 255, 255);
   float currWid, currHgt;
-  int chartW, chartH, origin;
-  
-  SquareMap(int chartW, int chartH, int origin, TreeNode root) {
+  int chartW, chartH, originX, originY;
+  Message hover;
+  SquareMap(int chartW, int chartH, int originX, int originY, TreeNode root) {
     background(color(255, 255, 255));
     currWid = chartW;
     currHgt = chartH;
     this.chartW = chartW;
     this.chartH = chartH;
-    this.origin = origin;
+    this.originX = originX;
+    this.originY = originY;
     this.root = root;
     canvas = makeCanvas(root);
   }
   
-  void draw() {
+  ArrayList<String> draw() {
     if (root != null && canvas != null) {
       //onResize();
       mouseOff();
-      mouseOver();
+      ArrayList<String> hovered = mouseOver();
+      if(hover != null) highLight(canvas, hover);
+      hover = null;
       canvas.draw();
       drawLabelBox();
+      return hovered;
     }
+    
+    return new ArrayList<String>();
   }
-  
-  //// parse data into tree
-  //TreeNode parseData() {
-  //  String[] lines = loadStrings("hierarchy2.shf");
-  //  int numLeaves = Integer.valueOf(lines[0]);
-  //  HashMap<Integer, TreeNode> nodes = new HashMap<Integer, TreeNode>();
-    
-  //  for (int i = 1; i <= numLeaves; i++) {
-  //    String[] currLine = lines[i].split(" ");
-  //    int id = Integer.valueOf(currLine[0]);
-  //    float wgt = Float.valueOf(currLine[1]);
-  //    nodes.put(id, new TreeNode(id, wgt));
-  //  }
-    
-  //  int numEdges = Integer.valueOf(lines[numLeaves + 1]);
-  //  for (int i = numLeaves + 2; i < numLeaves + 2 + numEdges; i++) {
-  //    String[] currLine = lines[i].split(" ");
-  //    int parentId = Integer.valueOf(currLine[0]);
-  //    int childId = Integer.valueOf(currLine[1]);
-  //    TreeNode parent, child;
-      
-  //    if (!nodes.containsKey(parentId)) {
-  //      parent = new TreeNode(parentId, 0);
-  //      nodes.put(parentId, parent);
-  //    } else {
-  //      parent = nodes.get(parentId);
-  //    }
-  //    if (!nodes.containsKey(childId)) {
-  //      child = new TreeNode(childId, 0);
-  //      nodes.put(childId, child);
-  //    } else {
-  //      child = nodes.get(childId);
-  //    }
-      
-  //    child.parent = parent;
-  //    parent.children.add(child);
-  //  }
-    
-  //  TreeNode root = null;
-  //  for (TreeNode node : nodes.values()) {
-  //    if (node.parent == null) {
-  //      root = node;
-  //      break;
-  //    }
-  //  }
-    
-  //  return root;
-  //}
   
   // gets total weight of a tree
   // side effect: nonleaf nodes have their weights set to that of their children
@@ -105,7 +63,7 @@ class SquareMap {
   Rectangle makeCanvas(TreeNode node) {
     if (node != null) {
       normalize(node, sumNodeWeight(node));
-      Rectangle newCanvas = new Rectangle(node, null, 0, 0, 1, 1, ON, OFF, this.chartW, this.chartH, this.origin);
+      Rectangle newCanvas = new Rectangle(node, null, 0, 0, 1, 1, ON, OFF, this.chartW, this.chartH, this.originX, this.originY);
       squarify(node, newCanvas);
       return newCanvas;
     } else {
@@ -131,6 +89,20 @@ class SquareMap {
     return max((w * w * max) / (sum * sum), (sum * sum) / (w * w * min));
   }
   
+  void highLight(Rectangle rect, Message m){
+     String type = m.type1;
+     int g = m.gen;
+     if(rect.node.id.equals(type) && findGeneration(rect.node) == g && rect.node.parent.id.contains("Gen")) {
+       rect.onOver();
+     }
+     
+     if(rect.node.parent != null && findGeneration(rect.node) == g){
+        if(rect.node.parent.id.equals(type)) rect.onOver(); 
+     }
+     for(Rectangle r : rect.children){
+        highLight(r, m); 
+     }
+  }
   void squarify(TreeNode node, Rectangle r) {
     if (node.children.size() <= 0) {
       return;
@@ -164,17 +136,23 @@ class SquareMap {
     }
   }
   
-  void onRects(Rectangle r) {
+ void onRects(Rectangle r, ArrayList<String> list) {
     if (r.isOver()) {
       r.onOver();
+      if (r.node.id != "root") {
+        if(r.node.children.size() == 0 && !list.contains(r.node.parent.id)) list.add(r.node.parent.id);
+        list.add(r.node.id);
+      }
       for (Rectangle c : r.children) {
-        onRects(c);
+        onRects(c, list);
       }
     }
   }
   
-  void mouseOver() {
-    onRects(canvas);
+  ArrayList<String> mouseOver() {
+    ArrayList hovered = new ArrayList<String>();
+    onRects(canvas, hovered);
+    return hovered;
   }
   
   void offRects(Rectangle r, Rectangle over) {
@@ -190,36 +168,69 @@ class SquareMap {
     offRects(canvas, canvas.whichOver());
   }
   
-  String mouseClicked() {
+  Message mouseClicked() {
     CharSequence cs1 = "Gen";
     Rectangle over = canvas.whichOver();
+    Message m;
+    String type1 = "";
+    String type2 = "";
     if (over != null) {
+      int g = findGeneration(over.node);
       if (mouseButton == LEFT) {
         canvas = makeCanvas(over.node);
         if(over.node.id.equals("NA")){
-           return(over.node.parent.id); 
-        } else if(over.node.id.contains(cs1)){
-           return ""; 
+           type1 = over.node.parent.id;
+           type2 = "NA";
+           if(type1.contains(cs1)) {
+             type1 = "";
+             type2 = "";
+           }
+        } else if(over.node.id.contains(cs1) || over.node.id.contains("root")){
+           type1 = ""; 
+           type2 = "";
+        } else if (over.node.children.size() == 0) {
+          type2 = over.node.id;
+          type1 = over.node.parent.id;
+        } else { //has children
+          type2 = "";
+          type1 = over.node.id;
         }
-        return over.node.id;
       }  else if (mouseButton == RIGHT) {
         if(canvas.node.parent != null){
           String toReturn = canvas.node.parent.id;
           canvas = makeCanvas(canvas.node.parent);
           if(toReturn.contains(cs1)){
-             return ""; 
+             type1 = ""; 
+             type2 = "";
           } else if(toReturn.equals("root")){
-             return ""; 
+             type1 = ""; 
+             type2 = "";
           }
           //println(canvas.node.parent.id, "    AHHHAIOSJAOJSLAK:LSA+======");
-          return toReturn;
+          else {
+            type1 = toReturn;
+            type2 = "";
+          }
         }
       }
+      
+      return new Message(g, type1, type2);
     }
     
-    return "";
+    return null;
   }
   
+  int findGeneration(TreeNode n){
+    CharSequence cs1 = "Gen";
+    if(n.id.contains(cs1)){
+       String[] s = n.id.split(" ");
+       
+       return Integer.valueOf(s[1]); 
+    }
+    
+    else if(n.parent != null) return findGeneration(n.parent);
+    return -1;
+  }
   Boolean resized() {
     return currWid != chartW || currHgt != chartH;
   }
@@ -241,15 +252,15 @@ class SquareMap {
     float padding = 2 * FRAME;
     float boxW = max(textWidth(idstr), textWidth(wgtstr)) + 2 * padding;
     float boxH = 2 * (textAscent() + textDescent() + padding);
-    float boxX = mouseX - this.origin;
-    float boxY = mouseY - boxH - padding;
+    float boxX = mouseX - this.originX;
+    float boxY = mouseY - this.originY - boxH - padding;
     
     if (boxX + boxW > chartW) {
-      boxX = mouseX - boxW - padding - this.origin;
-      boxY = mouseY + boxH > chartH ? boxY : mouseY;
+      boxX = mouseX - boxW - padding - this.originX;
+      boxY = mouseY + boxH > chartH ? boxY - this.originY : mouseY;
     } else if (boxY < 0) {
-      boxX = mouseX + 2 * padding - this.origin;
-      boxY = mouseY;
+      boxX = mouseX + 2 * padding - this.originX;
+      boxY = mouseY - this.originY;
     }
     
     fill(color(255, 255, 255));
